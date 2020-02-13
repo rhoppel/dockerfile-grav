@@ -12,6 +12,9 @@ This currently is pretty minimal and uses:
 * cron
 * vim editor
 
+## [VS Code & Docker](https://code.visualstudio.com/docs/containers/overview)
+
+
 ## Building the image from Dockerfile
 
 ```
