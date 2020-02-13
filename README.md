@@ -28,10 +28,32 @@ Point browser to `http://localhost:8000` and create user account...
 
 ## Running Grav Image with Latest Grav + Admin with a named volume (can be used in production)
 
+- linux [volume] *[/var/lib/docker/volumes/grav_data/\_data]*
+
 ```
 docker run -d -p 8000:80 --name grav --restart always -v grav_data:/var/www/html grav:1.0
 ```
-
+- windows [bind] *[g:\docker\hoppellodge\user]*
+```
+docker run -d -p 8413:80 --name grav --restart always -v g:\docker\hoppellodge\user:/var/www/html/user grav:latest
+```
+```
+$ docker run -d \
+  -it \
+  --name devtest \
+  --mount type=bind,source="$(pwd)"/target,target=/app \
+  --mount type=bind,source="$(pwd)"/target,target=/app2,readonly,bind-propagation=rslave \
+  nginx:latest
+```  
+equivalent to the following
+```
+$ docker run -d \
+  -it \
+  --name devtest \
+  -v "$(pwd)"/target:/app \
+  -v "$(pwd)"/target:/app2:ro,rslave \
+  nginx:latest
+```
 ## My "raspi2b" instance
 
 ```
