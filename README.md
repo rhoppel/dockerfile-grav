@@ -35,7 +35,7 @@ docker run -d -p 8000:80 --name grav --restart always -v grav_data:/var/www/html
 ## My "raspi2b" instance
 
 ```
-sudo docker run -d -p 81:80 --name grav --restart always -v grav_data:/var/www/html grav:latest
+sudo docker run -d -p 81:80 --name grav-1 --restart always -v grav_data:/var/www/html grav:latest
 ```
 
 ```
