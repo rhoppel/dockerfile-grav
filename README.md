@@ -64,3 +64,47 @@ drwxrwxr-x  8 www-data www-data   4096 Feb 12 18:31 user
 drwxrwxr-x 29 www-data www-data   4096 Feb 12 18:31 vendor
 drwxrwxr-x  2 www-data www-data   4096 Feb 12 18:31 webserver-configs
 ```
+### raspberry pi docker development
+
+#### persistent data
+- **docker:**  /var/lib/docker/volumes/grav_data
+- **pi:**      /home/pi/websites/html/_data
+
+#### /etc/fstab [data sharing between docker and "pi" user]
+```
+*pi@raspi2A (master)✗* > cat /etc/fstab 
+proc                  /proc           proc    defaults          0       0
+PARTUUID=cda682ca-01  /boot           vfat    defaults          0       2
+PARTUUID=cda682ca-02  /               ext4    defaults,noatime  0       1
+# a swapfile is not a swap partition, no line here
+#   use  dphys-swapfile swap[on|off]  for that
+# bindfs is the magic
+bindfs#/var/lib/docker/volumes/grav_data /home/pi/websites/html fuse force-user=pi,force-group=pi,create-for-user=www-data,create-for-group=www-data,create-with-perms=0770,chgrp-ignore,chown-ignore,chmod-ignore 0 0
+
+```
+#### clean persistent data from raspberry pi
+```
+rm -rf /home/pi/websites/html/_data/*
+```
+
+## bindfs: Development sharing data
+
+### Installing bindfs (just the first time)
+```
+pi@raspi2b $ apt-get update
+pi@raspi2b  $ apt-get -y install bindfs
+```
+### Creating the application mountpoint
+```
+pi@raspi2b  $ mkdir -p /home/pi/websites/html
+pi@raspi2b  $ chown -Rf pi:pi /home/pi/websites
+pi@raspi2b  $ chmod -Rf 770 /home/pi/websites
+```
+Then, edit the content of /etc/fstab and add this line (just one line, without line wraps):
+```
+bindfs#/var/www/html /home/pi/websites/html fuse force-user=pi,force-group=pi,create-for-user=www-data,create-for-group=www-data,create-with-perms=0770,chgrp-ignore,chown-ignore,chmod-ignore 0 0
+```
+Save the file, and proceed with mounting application (will mount automatically at system load):
+```
+pi@raspi2b $ mount /home/pi/websites/html
+```
